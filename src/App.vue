@@ -10,7 +10,7 @@
         <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct"/>
       </section>
       <section>
-        <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody"/>
+        <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody" @select-product="getSelectedProduct"/>
       </section>
     </div>
 
@@ -75,6 +75,24 @@ export default {
       console.log(data)
       console.log(this.arrayTableBody)
     },
+
+    async getSelectedProduct(idSelected) {
+      const req = new Request (
+        `${this.baseURL}/stock/${idSelected}`,
+        {
+          method: 'GET',
+          mode: 'cors'
+        }
+      )
+
+      const res = await fetch(req)
+      const selectedProduct = await res.json()
+
+      console.log(selectedProduct)
+
+      this.formValues = selectedProduct
+    },
+
     async postProduct(formInfos) {
       const headers = new Headers ()
 

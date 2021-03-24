@@ -16,7 +16,7 @@
                 <td>{{bodyData.client.phone}}</td>
                 <td>{{bodyData.active}}</td>
                 <td id="actionButtons">
-                    <button id="buttonSelect">Select</button>
+                    <button id="buttonSelect" @click="$emit('select-product', bodyData._id)">Select</button>
                     <button id="buttonDelete">Delete</button>
                 </td>
             </tr>
@@ -82,11 +82,13 @@ export default {
         overflow: auto;
         font-size: .8rem;
         text-align: center;
+        padding: 1px 5px;
     }
 
     #actionButtons {
         display: flex;
         justify-content: space-around;
+        align-items: center;
     }
 
     #buttonSelect {
