@@ -7,7 +7,7 @@
 
     <div class="container">
       <section id="forms">
-        <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct"/>
+        <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct" @put-product="updateSelectedProduct"/>
       </section>
       <section>
         <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody" @select-product="getSelectedProduct"/>
@@ -46,7 +46,7 @@ export default {
 
       actionForm: 'Add Product',
 
-      baseURL: 'https://crudcrud.com/api/e60e84838b744062ae9e9c869beb38d8', // 8
+      baseURL: 'https://crudcrud.com/api/b2690fbe12fc4e2382b3887290c163ce', // 
 
       arrayTableHead: ["_Id","Product Name", "Product Brand", "Quantity", "Price", "Client Name", "Client Phone", "Active", "Actions"],
 
@@ -72,8 +72,6 @@ export default {
       const data = await res.json()
 
       this.arrayTableBody = data
-      console.log(data)
-      console.log(this.arrayTableBody)
     },
 
     async getSelectedProduct(idSelected) {
@@ -91,6 +89,7 @@ export default {
       console.log(selectedProduct)
 
       this.formValues = selectedProduct
+      this.actionForm = 'Update Product'
     },
 
     async postProduct(formInfos) {
@@ -117,9 +116,37 @@ export default {
 
       console.log(data)
       await this.getProduct()
+    },
+
+    async updateSelectedProduct(updateInfos) {
+      const headers = new Headers ()
+      headers.append(
+        'Content-type',
+        'application/json;charset=utf-8'
+      )
+
+      const req = new Request (
+        `${this.baseURL}/stock/${updateInfos._id}`,
+        {
+          method: 'PUT',
+          mode: 'cors',
+          body: JSON.stringify(updateInfos),
+          headers,
+          cache: 'default'
+        }
+      )
+
+      this.actionForm = 'Add Product'
+
+      const res = await fetch(req)
+      const updatedProduct = res.json()
+      console.log(updatedProduct)
+
+      await this.getProduct()
+
     }
 
-  },
+  }
 }
 </script>
 
