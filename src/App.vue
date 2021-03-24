@@ -5,20 +5,27 @@
       <h1>Teste Front-end Lexart Labs</h1>
     </header>
 
-    <section id="forms">
-      <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct"/>
-    </section>
+    <div class="container">
+      <section id="forms">
+        <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct"/>
+      </section>
+      <section>
+        <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody"/>
+      </section>
+    </div>
 
   </div>
 </template>
 
 <script>
 import Form from './components/Form'
+import Table from './components/Table'
 
 export default {
   name: 'App',
   components: {
     Form,
+    Table
   },
   
   data () {
@@ -41,6 +48,8 @@ export default {
 
       baseURL: 'https://crudcrud.com/api/e60e84838b744062ae9e9c869beb38d8', // 8
 
+      arrayTableHead: ["_Id","Product Name", "Product Brand", "Quantity", "Price", "Client Name", "Client Phone", "Active", "Actions"],
+
       arrayTableBody: []
     }
   },
@@ -60,10 +69,10 @@ export default {
       )
 
       const res = await fetch(req)
-      const { data } = await res.json()
+      const data = await res.json()
 
       this.arrayTableBody = data
-
+      console.log(data)
       console.log(this.arrayTableBody)
     },
     async postProduct(formInfos) {
@@ -89,6 +98,7 @@ export default {
       const data = await res.json()
 
       console.log(data)
+      await this.getProduct()
     }
 
   },
@@ -121,6 +131,12 @@ export default {
     widows: 100%;
     background-color: var(--default-orange);
     color: white;
+  }
+
+  .container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 0 8px;
   }
 
   @media(max-width:768px) {

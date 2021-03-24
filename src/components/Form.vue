@@ -66,7 +66,7 @@ export default {
     #inputs {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         width: 100%;
     }
 
@@ -84,13 +84,14 @@ export default {
     #submitButton:hover {
         background: white;
         color: var(--default-orange);
+        transition: .3s;
     }
 
     fieldset {
         padding: 5px;
         width: 30%;
         border-radius: 3px;
-        border: 1px solid var(--default-orange);
+        border: 1px solid #ddd;
         color: var(--default-orange);
     }
 
@@ -108,7 +109,7 @@ export default {
         }
 
         fieldset {
-            width: 95%;
+            width: 100%;
             margin: auto;
         }
     }
