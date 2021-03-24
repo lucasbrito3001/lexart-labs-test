@@ -10,7 +10,7 @@
         <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct" @put-product="updateSelectedProduct"/>
       </section>
       <section>
-        <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody" @select-product="getSelectedProduct"/>
+        <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody" @select-product="getSelectedProduct" @delete-product="deleteProduct"/>
       </section>
     </div>
 
@@ -46,7 +46,7 @@ export default {
 
       actionForm: 'Add Product',
 
-      baseURL: 'https://crudcrud.com/api/b2690fbe12fc4e2382b3887290c163ce', // 
+      baseURL: 'https://crudcrud.com/api/ccb988716b254cae810d1c0b26201cfb', // 
 
       arrayTableHead: ["_Id","Product Name", "Product Brand", "Quantity", "Price", "Client Name", "Client Phone", "Active", "Actions"],
 
@@ -111,11 +111,9 @@ export default {
         }
       )
 
-      const res = await fetch(req)
-      const data = await res.json()
+       await fetch(req)
 
-      console.log(data)
-      await this.getProduct()
+      this.getProduct()
     },
 
     async updateSelectedProduct(updateInfos) {
@@ -139,11 +137,29 @@ export default {
       this.actionForm = 'Add Product'
 
       const res = await fetch(req)
-      const updatedProduct = res.json()
+      const updatedProduct = await res.json()
       console.log(updatedProduct)
 
-      await this.getProduct()
+      this.getProduct()
 
+    },
+
+    async deleteProduct(idDeleted) {
+      try {
+        const req = new Request (
+        `${this.baseURL}/stock/${idDeleted}`,
+        {
+          method: 'DELETE',
+          mode: 'cors'
+        }
+      )
+
+        await fetch(req)
+
+        this.getProduct()
+      } catch (error) {
+        console.error('[ERROR]')
+      }
     }
 
   }

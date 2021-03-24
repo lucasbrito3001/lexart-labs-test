@@ -16,8 +16,8 @@
                 <td>{{bodyData.client.phone}}</td>
                 <td>{{bodyData.active}}</td>
                 <td id="actionButtons">
-                    <button id="buttonSelect" @click="$emit('select-product', bodyData._id)">Select</button>
-                    <button id="buttonDelete">Delete</button>
+                    <button name="select" id="buttonSelect" @click="$emit('select-product', bodyData._id)">Select</button>
+                    <button name="delete" id="buttonDelete" @click="$emit('delete-product', bodyData._id)">Delete</button>
                 </td>
             </tr>
         </tbody>
