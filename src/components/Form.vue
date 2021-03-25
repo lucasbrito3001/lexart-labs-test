@@ -91,12 +91,12 @@ export default {
         padding: 5px;
         width: 30%;
         border-radius: 3px;
-        border: 1px solid #ddd;
+        border: 1px solid #888;
         color: var(--default-orange);
     }
 
     input {
-        border: 1px solid #ddd;
+        border: 1px solid #888;
         border-radius: 3px;
         font-size: 1rem;
         padding: 2px 5px;

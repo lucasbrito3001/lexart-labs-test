@@ -9,7 +9,8 @@
       <section id="forms">
         <Form :props-forms="formValues" :actionForm="actionForm" @post-product="postProduct" @put-product="updateSelectedProduct"/>
       </section>
-      <section>
+      <section id="table">
+        <h2>ABM Stock</h2>
         <Table :table-head-datas="arrayTableHead" :table-body-datas="arrayTableBody" @select-product="getSelectedProduct" @delete-product="deleteProduct"/>
       </section>
     </div>
@@ -44,11 +45,13 @@ export default {
         active: ''
       },
 
+      idToUpdate: '',
+
       actionForm: 'Add Product',
 
-      baseURL: 'https://crudcrud.com/api/ccb988716b254cae810d1c0b26201cfb', // 
+      crudcrudURL: 'https://crudcrud.com/api/755d6e3510194903a40c58924c9b3cdc', // link do crudcrud que vai ser utilizado para realizar as requests!
 
-      arrayTableHead: ["_Id","Product Name", "Product Brand", "Quantity", "Price", "Client Name", "Client Phone", "Active", "Actions"],
+      arrayTableHead: ["_Id","Product Name", "Product Brand", "Quantity", "Price (R$)", "Client Name", "Client Phone", "Active", "Actions"],
 
       arrayTableBody: []
     }
@@ -61,7 +64,7 @@ export default {
   methods: {
     async getProduct() {
       const req = new Request (
-        `${this.baseURL}/stock`,
+        `${this.crudcrudURL}/stock`,
         {
           method: 'GET',
           mode: 'cors'
@@ -75,8 +78,11 @@ export default {
     },
 
     async getSelectedProduct(idSelected) {
+
+      this.idToUpdate = idSelected
+
       const req = new Request (
-        `${this.baseURL}/stock/${idSelected}`,
+        `${this.crudcrudURL}/stock/${this.idToUpdate}`,
         {
           method: 'GET',
           mode: 'cors'
@@ -86,13 +92,25 @@ export default {
       const res = await fetch(req)
       const selectedProduct = await res.json()
 
-      console.log(selectedProduct)
+      this.formValues = {
+        product: {
+            name: selectedProduct.product.name,
+            brand: selectedProduct.product.brand,
+        },
+        client: {
+            name: selectedProduct.client.name,
+            phone: selectedProduct.client.phone,
+        },
+        price: selectedProduct.price,
+        quantity: selectedProduct.quantity,
+        active: selectedProduct.active
+      }
 
-      this.formValues = selectedProduct
       this.actionForm = 'Update Product'
     },
 
     async postProduct(formInfos) {
+
       const headers = new Headers ()
 
       headers.append(
@@ -100,8 +118,10 @@ export default {
         'application/json;charset=utf-8'
       )
 
+      console.log(formInfos)
+
       const req = new Request (
-        `${this.baseURL}/stock`,
+        `${this.crudcrudURL}/stock`,
         {
           method: 'POST',
           body: JSON.stringify(formInfos),
@@ -111,12 +131,16 @@ export default {
         }
       )
 
-       await fetch(req)
+      await fetch(req)
 
       this.getProduct()
+
+      this.clearFormInputs()
+
     },
 
     async updateSelectedProduct(updateInfos) {
+
       const headers = new Headers ()
       headers.append(
         'Content-type',
@@ -124,7 +148,7 @@ export default {
       )
 
       const req = new Request (
-        `${this.baseURL}/stock/${updateInfos._id}`,
+        `${this.crudcrudURL}/stock/${this.idToUpdate}`,
         {
           method: 'PUT',
           mode: 'cors',
@@ -134,20 +158,22 @@ export default {
         }
       )
 
+      await fetch(req)
+      
+      this.getProduct()
+
+      this.clearFormInputs()
+
       this.actionForm = 'Add Product'
 
-      const res = await fetch(req)
-      const updatedProduct = await res.json()
-      console.log(updatedProduct)
-
-      this.getProduct()
+      this.idToUpdate = ''
 
     },
 
     async deleteProduct(idDeleted) {
       try {
         const req = new Request (
-        `${this.baseURL}/stock/${idDeleted}`,
+        `${this.crudcrudURL}/stock/${idDeleted}`,
         {
           method: 'DELETE',
           mode: 'cors'
@@ -160,6 +186,16 @@ export default {
       } catch (error) {
         console.error('[ERROR]')
       }
+    },
+
+    clearFormInputs() {
+      this.formValues.product.name = ''
+      this.formValues.product.brand = ''
+      this.formValues.client.name = ''
+      this.formValues.client.phone = ''
+      this.formValues.price = ''
+      this.formValues.quantity = ''
+      this.formValues.active = ''
     }
 
   }
@@ -194,6 +230,15 @@ export default {
     color: white;
   }
 
+  #table h2 {
+    font-size: .8rem;
+    text-align: left;
+    color: var(--default-orange);
+    width: fit-content;
+    border-bottom: 2px solid #888;
+    margin-top: 4vh;
+  }
+
   .container {
     max-width: 1250px;
     margin: auto;
@@ -203,6 +248,16 @@ export default {
   @media(max-width:768px) {
     html {
       font-size: 14px;
+    }
+  }
+
+  @media(max-width:350px) {
+    html {
+      font-size: 13.5px;
+    }
+
+    header {
+      font-size: .7rem;
     }
   }
 

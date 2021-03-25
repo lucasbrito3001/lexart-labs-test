@@ -42,7 +42,7 @@ export default {
     table {
         display: flex;
         flex-direction: column;
-        margin-top: 5vh;
+        margin-top: 1vh;
         border: 1px solid #ddd;
     }
 
