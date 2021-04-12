@@ -1,6 +1,4 @@
 # <strong>Documentação e Instruções do Projeto!</strong>
-
-## <strong style="color: orange">Documentação:</strong>
 <hr/>
 <br/>
 
